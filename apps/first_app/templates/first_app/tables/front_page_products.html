@@ -1,0 +1,31 @@
+{% load staticfiles %}
+{% for product in products%}
+    {% if product.inventory_count > 0%}
+        <div class="card product">
+            <img class="card-img-top" src="{% static product.main_picture %}">
+            <div class="card-body">
+            <small class="text-muted">{{product.category.name}}</small>
+                <a href="/product/{{product.id}}"><h5 class="card-title">{{product.name}}</h5></a>
+            <div class='row'>
+            <div class='col-md-12'>
+                <form method='post' action='/add_to_cart'>
+                    {% csrf_token %}
+                    <input type="hidden" name="product_id" value="{{product.id}}">
+                    <div class='price-new' style='color:gray'>${{product.price}}</div>
+                    <input type="submit" value="Order" class="btn btn-primary btn-sm float-right">
+                </form>
+            </div>
+        </div>
+        </div>
+        </div>
+    {% else %}
+        <div class="card product">
+            <img class="card-img-top" src="{% static product.main_picture %}">
+            <div class="card-body">
+            <small class="text-muted">SOLD OUT</small>
+                <a href="/product/{{product.id}}"><h5 class="card-title">{{product.name}}</h5></a>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
+</div>

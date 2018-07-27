@@ -1,0 +1,24 @@
+<table class="table table-bordered" id="orders_table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Date</th>
+            <th scope="col">Shipping Address</th>
+            <th scope="col">Status</th>
+            <th scope="col">More</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{order.id}}</td>
+            <td>{{order.customer.full_name}}</td>
+            <td>{{order.created_at}}</td>
+            <td>{{order.customer.shipping_address}}, {{order.customer.shipping_city}}, {{order.customer.shipping_state}} - {{order.customer.shipping_zipcode}}</td>
+            <td>{{order.order_status.status}}</td>
+            <td>
+                <a href="/dashboard/orders/{{order.id}}" type="button" class="btn btn-info btn-sm"><i class='material-icons' style="font-size: 35px">add_circle</i></a>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>As Seen On Instagram</title>
+    <!-- CSS Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <!-- Adding Google's icon library -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <!-- Loading static files -->
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'first_app/css/styles.css' %}" />
+</head>
+<body>
+    <div class="container">
+        <!--     Navbar code    --> 
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'first_app/images/watermelon.png' %}" alt="Website Logo" id="website_logo"/><span class="ml-3">As Seen On Instagram</span></a>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/category/1">Clothing</a>
+                        <a class="dropdown-item" href="/category/2">Shoes</a>
+                        <a class="dropdown-item" href="/category/3">Acessories</a>
+                    </li>
+                  </ul>
+                </div>
+        </nav>
+        <div class="row">
+            <div class="col-lg-12">
+                    <h6 class="display-4 mt-3 mb-3">Thank you for your order!</h6>
+                    <p class="lead mt-3 mb-3">We will ship the following items to {{order.customer.shipping_address}} {{order.customer.shipping_city}} {{order.customer.shipping_state}} {{order.customer.shipping_zipcode}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in order.products.all%}
+                    <tr>
+                        <td>{{product.name}}</td>
+                        <td>{{product.price}}</td>
+                        <td>1</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="/" type="button" class="btn btn-success btn-lg float-right">Take Me Back Home!</a>
+        </div>
+    </div>
+
+        <footer class="container">
+            <hr>
+            <p>2018-2022 Watermelon Company, Inc. <a href="">Privacy Policy</a> - <a href="">Terms of Service</a></p>
+        </footer>
+    </div>
+    <!-- jQuery, Popper.js, Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script> 
+</body>
+</html>

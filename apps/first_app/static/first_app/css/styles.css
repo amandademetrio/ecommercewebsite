@@ -1,0 +1,15 @@
+#website_logo {
+    height: 60px;
+}
+
+.tiny_text {
+    font-size: xx-small;
+}
+
+.resetBackgroundToWhite {
+    background-color: white
+}
+
+.red {
+    color:red
+}

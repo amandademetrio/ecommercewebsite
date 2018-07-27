@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>As Seen On Instagram</title>
+    <!-- CSS Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <!-- Adding Google's icon library -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <!-- Loading static files -->
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'first_app/css/styles.css' %}" />
+</head>
+<body>
+    <div class="container">
+        <!--     Navbar code    --> 
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'first_app/images/watermelon.png' %}" alt="Website Logo" id="website_logo"/><span class="ml-3">As Seen On Instagram</span></a>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/category/1">Clothing</a>
+                        <a class="dropdown-item" href="/category/2">Shoes</a>
+                        <a class="dropdown-item" href="/category/3">Acessories</a>
+                    </li>
+                  </ul>
+                    <a href="/loadcart" role="button" class="btn btn-light">Shopping Cart <span class="badge badge-secondary">{{request.session.cart_count}}</span></a>
+                </div>
+        </nav>
+        <div class="row mt-3">
+            <div class="col-sm-3 removeOnMobile">
+                    <div class="container">
+                        <!-- Search -->
+                        <form>
+                            <div class="row">
+                                <form method='post' action='product/find/category' id="product_search_form">
+                                    {% csrf_token %}
+                                    <div class="col-md-12">
+                                        <input type="hidden" name="category" value="{{category.id}}">
+                                        <input type="text" class="form-control" placeholder="Search products" id="product_search" name="product_search_name">
+                                    </div>
+                                </form>
+                            </div>
+                        </form>
+                        <!-- End of form -->
+                    </div>
+            </div>
+            <div class="col-sm-9">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h2 class="float-right">{{category.name}}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Products -->
+        <div class="row mt-2">
+            <div class="col-md-12">
+                <div class="card-columns" id="product_card_deck">
+                        {% for product in products%}
+                        {% if product.inventory_count > 0%}
+                        <div class="card product">
+                            <img class="card-img-top" src="{% static product.main_picture %}">
+                            <div class="card-body">
+                                <small class="text-muted">{{product.category.name}}</small>
+                                <a href="/product/{{product.id}}"><h5 class="card-title">{{product.name}}</h5></a>
+                                <div class='row'>
+                                    <div class='col-sm-4'>
+                                        <form method='post' action='/add_to_cart'>
+                                        {% csrf_token %}
+                                            <input type="hidden" name="product_id" value="{{product.id}}">
+                                            <input type="submit" value="+" class="btn btn-primary">
+                                        </form>
+                                    </div>
+                                    <div class='col-sm-8 lead' style='color:gray'>${{product.price}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="card product">
+                                <img class="card-img-top" src="{% static product.main_picture %}">
+                                <div class="card-body">
+                                    <small class="text-muted">SOLD OUT</small>
+                                    <a href="/product/{{product.id}}"><h5 class="card-title">{{product.name}}</h5></a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    <!-- Footer -->
+    <footer class="container">
+        <hr>
+        <p>2018-2022 Watermelon Company, Inc. <a href="">Privacy Policy</a> - <a href="">Terms of Service</a></p>
+    </footer>
+    <!-- End of footer -->
+    <!-- jQuery, Popper.js, Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+    <!-- JQuery Minified For AJAX -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script>
+    /* Ajax for product search */
+    $('#product_search').keyup(function(){
+         $.ajax({
+            url: 'product/find/category',
+            method: 'post',
+            data: $(this).parent().parent().parent().serialize(),
+            success: function(serverResponse) {
+                $('#product_card_deck').html(serverResponse)
+            }
+        });
+    });
+
+
+    </script> 
+</body>
+</html>

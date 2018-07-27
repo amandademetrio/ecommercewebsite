@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>As Seen On Instagram</title>
+    <!-- CSS Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <!-- Adding Google's icon library -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <!-- Loading static files -->
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'first_app/css/styles.css' %}" />
+</head>
+<body>
+    <div class="container">
+        <!--     Navbar code    --> 
+        <nav class="navbar navbar-expand-lg navbar-light bg-info">
+            <a class="navbar-brand" href="/dashboard/orders">
+                <img src="{% static 'first_app/images/watermelon.png' %}" alt="Website Logo" id="website_logo"/><span class="ml-3">As Seen On Instagram</span></a>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin Features</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/dashboard/orders">Orders</a>
+                        <a class="dropdown-item" href="/dashboard/products">Products</a>
+                        <a class="dropdown-item disabled" href="#">Users</a>
+                    </li>
+                  </ul>
+                    <a href="/admin/logout" class="my-2 my-lg-0 btn btn-light my-sm-0" type="submit">Logout</a>
+                </div>
+        </nav>
+
+        <div class="row mt-4 mb-4">
+
+            <div class="col-sm-4">
+                <div class="container border">
+                    <h2 class="mt-2">Order ID: {{order.id}}</h2>
+                    <small class="text-muted">Customer: {{order.customer.full_name}}</small>
+                    <h4 class="mt-4 mb-4">Shipping Info:</h4>
+                    <p>Address: {{order.customer.shipping_address}}</p>
+                    <p>City: {{order.customer.shipping_city}}</p>
+                    <p>State: {{order.customer.shipping_state}}</p>
+                    <p>Zipcode: {{order.customer.shipping_zipcode}}</p>
+                    <h4 class="mt-4 mb-4">Billing Info:</h4>
+                    <p>Address: {{order.customer.billing_address}}</p>
+                    <p>City: {{order.customer.billing_city}}</p>
+                    <p>State: {{order.customer.billing_state}}</p>
+                    <p>Zipcode: {{order.customer.billing_zipcode}}</p>
+                </div>
+            </div>
+
+            <div class="col-sm-8">
+
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Item</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in order.products.all%}
+                                <tr>
+                                    <td>{{product.id}}</td>
+                                    <td>{{product.name}}</td>
+                                    <td>${{product.price}}</td>
+                                    <td>1</td>
+                                    <td>${{product.price}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-sm-12">
+                        <div class="alert alert-success mb-4" role="alert">
+                            <strong>Status:</strong> {{order.order_status.status}}
+                            <!-- Button trigger order status change modal -->
+                            <button type="button" class="btn btn-light btn-sm float-right" data-toggle="modal" data-target="#order_status_change">Change</button>
+                            <!-- Order Status change modal -->
+                            <div class="modal fade" id="order_status_change" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">What is the new order status?</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <form method='post' action='dashboard/orders/change_status'>
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <select class="form-control" name="new_order_status">
+                                                <option></option>
+                                                <option>Placed</option>
+                                                <option>Shipped</option>
+                                                <option>Cancelled</option>
+                                                <option>Delivered</option>
+                                            </select>
+                                        </div>
+                                        <input type="hidden" name="order_id" value="{{order.id}}">
+                                        <input type="submit" role="button" value="Save Changes" class="btn btn btn-info float-right">
+                                    </form>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <!-- End of modal -->
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <p>Subtotal: ${{subtotal}}</p>
+                                <p>Shipping: ${{shipping_price}}</p>
+                                <p>Total Price: ${{total_price}}</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+        </div>
+
+        </div>
+    </div>
+
+    <!-- jQuery, Popper.js, Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script> 
+</body>
+</html>

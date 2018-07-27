@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<table class="table table-bordered" id="products_table">
+        {% load staticfiles %}
+        <thead>
+            <tr>
+                <th scope="col">Picture</th>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Inventory Count</th>
+                <th scope="col">Quantity Sold</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>
+                    <img src="{% static product.main_picture %}" style="width: 100px;">
+                </td>
+                <td>{{product.id}}</td>
+                <td>{{product.name}}</td>
+                <td>{{product.inventory_count}}</td>
+                <td>{{product.sold_count}}</td>
+                <td>
+<!-- Button trigger edit modal -->
+<button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#editModal{{product.id}}">Edit</button>
+<!-- Edit product Modal -->
+<div class="modal fade" id="editModal{{product.id}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit the product</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+        <!-- Form to edit product -->
+        <form method='post' action='/dashboard/products/update'>
+            {% csrf_token %}
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" class="form-control" name="new_name" value="{{product.name}}">
+                </div>
+                <div class="form-group">
+                    <label>Picture:</label>
+                    <input type="text" class="form-control-file" name="new_picture" value="{{product.main_picture}}">
+                </div>
+                <div class="form-group">
+                    <label>Description:</label>
+                    <input type="text" class="form-control" name="new_desc" value="{{product.description}}">
+                </div>
+                <div class="form-group">
+                    <label>Inventory Count</label>
+                    <input type="number" class="form-control" name="new_inv_count" value="{{product.inventory_count}}">
+                </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <input type="number" class="form-control" name="new_price" value="{{product.price}}">
+                </div>
+                <div class="form-group">
+                    <label>Quantity Sold</label>
+                    <input type="number" class="form-control" name="new_sold" value="{{product.sold_count}}">
+                </div>
+                <input type="hidden" name="product_id" value="{{product.id}}">
+                <input type="submit" value="Save Changes" class="btn btn btn-info float-right">
+            </form>
+            <!-- End of form -->
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- Button trigger delete modal -->
+<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal{{product.id}}">Delete</button>
+<!-- Delete product Modal -->
+<div class="modal fade" id="deleteModal{{product.id}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to delete {{product.name}}?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+        <p>You won't be able to undo this change</p>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <form action='/dashboard/products/delete' method='post'>
+            {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{product.id}}">
+            <input type="submit" role="button" value="Yes. Go ahead!" class="btn btn-danger">
+        </form>
+        </div>
+    </div>
+    </div>
+</div>
+<!-- End of modal -->
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>

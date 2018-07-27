@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>As Seen On Instagram</title>
+    <!-- CSS Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <!-- Adding Google's icon library -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <!-- Loading static files -->
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'first_app/css/styles.css' %}" />
+</head>
+<body>
+    <div class="container">
+        <!--     Navbar code    --> 
+        <nav class="navbar navbar-expand-lg navbar-light bg-info">
+            <a class="navbar-brand" href="/admin">
+                <img src="{% static 'first_app/images/watermelon.png' %}" alt="Website Logo" id="website_logo"/><span class="ml-3">As Seen On Instagram</span></a>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin Features</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/dashboard/orders">Orders</a>
+                        <a class="dropdown-item" href="/dashboard/products">Products</a>
+                        <a class="dropdown-item disabled" href="">Users</a>
+                    </li>
+                  </ul>
+                    <a href="/admin/logout" class="my-2 my-lg-0 btn btn-light my-sm-0" type="submit">Logout</a>
+                </div>
+        </nav>
+
+        <div class="row mt-3 mb-3">
+            <div class="col-sm-4">
+                <!-- Search -->
+                <form method='post' action='/dashboard/products/find' id="ajax_search_form">
+                    {% csrf_token %}
+                    <input class="form-control form-control-lg" type="text" placeholder="search" id="ajax_product_search" name="search_product">
+                </form>
+
+            </div>
+            <div class="col-sm-8">
+                <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#addproduct">Add New Product</button>
+            </div>
+      
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addproduct" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Add a Product</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form to add new product -->
+                <form method='post' action='/dashboard/products/add'>
+                {% csrf_token %}
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" class="form-control" name="product_name">
+                    </div>
+                    <div class="form-group">
+                        <label>Picture:</label>
+                        <input type="text" class="form-control-file" name="product_picture">
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <input type="text" class="form-control" name="product_desc">
+                    </div>
+                    <div class="form-group">
+                        <label>Category:</label>
+                        <select class="form-control" name="new_cat">
+                            <option>Clothing</option>
+                            <option>Shoes</option>
+                            <option>Acessories</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Inventory Count</label>
+                        <input type="number" class="form-control" name="inventory_count">
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="number" class="form-control" name="price">
+                    </div>
+                    <input type="submit" value="Add" class="btn btn btn-info float-right">
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+        </div>
+    <!-- End of Modal -->
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- Table with products -->
+                <table class="table table-bordered" id="products_table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Picture</th>
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Inventory Count</th>
+                            <th scope="col">Quantity Sold</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products reversed %}
+                        <tr>
+                            <td>
+                                <img src="{% static product.main_picture %}" style="width: 100px;">
+                            </td>
+                            <td>{{product.id}}</td>
+                            <td>{{product.name}}</td>
+                            <td>{{product.inventory_count}}</td>
+                            <td>{{product.sold_count}}</td>
+                            <td>
+                                <!-- Button trigger edit modal -->
+                                <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#editModal{{product.id}}">Edit</button>
+                                <!-- Edit product Modal -->
+                                <div class="modal fade" id="editModal{{product.id}}" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Edit the product</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                        <div class="modal-body">
+                                        <!-- Form to edit product -->
+                                        <form method='post' action='/dashboard/products/update'>
+                                            {% csrf_token %}
+                                                <div class="form-group">
+                                                    <label>Name:</label>
+                                                    <input type="text" class="form-control" name="new_name" value="{{product.name}}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Picture:</label>
+                                                    <input type="text" class="form-control-file" name="new_picture" value="{{product.main_picture}}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Description:</label>
+                                                    <input type="text" class="form-control" name="new_desc" value="{{product.description}}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Inventory Count</label>
+                                                    <input type="number" class="form-control" name="new_inv_count" value="{{product.inventory_count}}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Price</label>
+                                                    <input type="number" class="form-control" name="new_price" value="{{product.price}}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Quantity Sold</label>
+                                                    <input type="number" class="form-control" name="new_sold" value="{{product.sold_count}}">
+                                                </div>
+                                                <input type="hidden" name="product_id" value="{{product.id}}">
+                                                <input type="submit" value="Save Changes" class="btn btn btn-info float-right">
+                                            </form>
+                                            <!-- End of form -->
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+
+                                <!-- Button trigger delete modal -->
+                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal{{product.id}}">Delete</button>
+                                <!-- Delete product Modal -->
+                                <div class="modal fade" id="deleteModal{{product.id}}" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to delete {{product.name}}?</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                        <div class="modal-body">
+                                        <p>You won't be able to undo this change</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                        <form action='/dashboard/products/delete' method='post'>
+                                            {% csrf_token %}
+                                            <input type="hidden" name="product_id" value="{{product.id}}">
+                                            <input type="submit" role="button" value="Yes. Go ahead!" class="btn btn-danger">
+                                        </form>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <!-- End of modal -->
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!-- End of table with products -->
+            </div>
+        </div>
+    </div>
+    <!-- jQuery, Popper.js, Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+    <!-- JQuery Minified For AJAX -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script>
+    /* Ajax for product search */
+    $('#ajax_product_search').keyup(function(){
+        $.ajax({
+            url: '/dashboard/products/find',
+            method: 'post',
+            data: $(this).parent().serialize(),
+            success: function(serverResponse) {
+                $('#products_table').html(serverResponse)
+            }
+        });
+    });
+    </script> 
+</body>
+</html>

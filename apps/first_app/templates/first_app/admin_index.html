@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>As Seen On Instagram</title>
+    <!-- CSS Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <!-- Adding Google's icon library -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <!-- Loading static files -->
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'first_app/css/styles.css' %}" />
+</head>
+<body>
+    <div class="container">
+        <!--     Navbar code    --> 
+        <nav class="navbar navbar-expand-lg navbar-light bg-info">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'first_app/images/watermelon.png' %}" alt="Website Logo" id="website_logo"/><span class="ml-3">As Seen On Instagram</span></a>
+            </a>
+        </nav>
+        <div class="row mt-3">
+                <!-- First column - Registration -->
+                <div class="col-sm-6 border-right">
+                    <h3 class="mb-3">Register here!</h3>
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if 'registration_errors' in message.extra_tags %}
+                            <p class="red">{{ message }}</p>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    <form action='admin/processregistration' method='post'>
+                    {% csrf_token %}
+                        <div class="form-group">
+                            <label>Name:</label>
+                            <input type="text" class="form-control" name="full_name" placeholder="Enter full name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <input type="email" class="form-control" name="email" placeholder="Enter e-mail">
+                        </div>
+                        <div class="form-group">
+                            <label>Password:</label>
+                            <input type="password" class="form-control" name="password" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password:</label>
+                            <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password">
+                        </div>
+                        <input type="submit" class="btn btn-primary float-right" value="Register!">
+                    </form>
+                </div>
+                <!-- Second column - Login -->
+                <div class="col-sm-6">
+                    <h3 class="mb-3">Login here!</h3>
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if 'login_errors' in message.extra_tags %}
+                            <p class="red">{{ message }}</p>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    <form action="/admin/login" method='post'>
+                    {% csrf_token %}
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <input type="email" class="form-control" name="email" placeholder="Enter e-mail">
+                        </div>
+                        <div class="form-group">
+                            <label>Password:</label>
+                            <input type="password" class="form-control" name="password" placeholder="Password">
+                        </div>
+                        <input type="submit" class="btn btn-primary float-right" value="Login">
+                    </form>
+                </div>
+            </div>
+
+    <footer class="container">
+        <hr>
+        <p>2018-2022 Watermelon Company, Inc. <a href="">Privacy Policy</a> - <a href="">Terms of Service</a></p>
+    </footer>
+    </div>
+    <!-- jQuery, Popper.js, Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script> 
+</body>
+</html>
